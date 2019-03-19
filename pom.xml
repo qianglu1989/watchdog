@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.redefine</groupId>
+    <artifactId>redefine-watchdog</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>com.redefine</groupId>
+        <artifactId>redefine-nove</artifactId>
+        <version>2.0.5-RELEASE</version>
+    </parent>
+
+    <profiles>
+
+        <profile>
+            <id>local</id>
+            <properties>
+                <redefine.eureka.serviceurl>http://172.23.2.156:8090/eureka/</redefine.eureka.serviceurl>
+                <redefine.mongo.uri>mongodb://collection:78hRdJEnJcHRb4qA@pre-mongod04.welike.in:20000/collection</redefine.mongo.uri>
+                <redefine.monitor.kafka.broker>172.23.3.75:9092,172.23.3.74:9092,172.23.3.72:9092</redefine.monitor.kafka.broker>
+
+                <redefine.config.profile>alipre</redefine.config.profile>
+                <redefine.config.label>alipre</redefine.config.label>
+
+
+                <spring.profile>alipre</spring.profile>
+            </properties>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+
+                <redefine.eureka.serviceurl>http://eureka01.welike.in:8090/eureka/,http://eureka02.welike.in:8090/eureka/</redefine.eureka.serviceurl>
+
+                <redefine.mongo.uri>mongodb://collection:78hRdJEnJcHRb4qA@mongod-ultron01.welike.in:27017,mongod-ultron02.welike.in:27017,mongod-ultron03.welike.in:27017/collection?replicaSet=shard1</redefine.mongo.uri>
+
+                <spring.profile>prod</spring.profile>
+                <redefine.monitor.kafka.broker>kafka-log-01.welike.local zk-log-01.welike.local,kafka-log-02.welike.local zk-log-02.welike.local,kafka-log-03.welike.local zk-log-03.welike.local</redefine.monitor.kafka.broker>
+                <redefine.config.profile>prod</redefine.config.profile>
+                <redefine.config.label>master</redefine.config.label>
+
+
+            </properties>
+
+        </profile>
+
+
+
+        <profile>
+            <id>alipre</id>
+            <properties>
+                <redefine.eureka.serviceurl>http://172.23.2.156:8090/eureka/</redefine.eureka.serviceurl>
+                <spring.profile>alipre</spring.profile>
+                <redefine.monitor.kafka.broker>172.23.3.75:9092,172.23.3.74:9092,172.23.3.72:9092</redefine.monitor.kafka.broker>
+                <redefine.mongo.uri>mongodb://collection:78hRdJEnJcHRb4qA@pre-mongod04.welike.in:20000/collection</redefine.mongo.uri>
+
+                <redefine.config.profile>alipre</redefine.config.profile>
+                <redefine.config.label>alipre</redefine.config.label>
+
+
+            </properties>
+
+        </profile>
+
+
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.openservices</groupId>
+            <artifactId>aliyun-log</artifactId>
+            <version>0.6.28</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.redefine</groupId>
+            <artifactId>redefine-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.redefine</groupId>
+            <artifactId>redefine-abt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.redefine</groupId>
+            <artifactId>redefine-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.redefine</groupId>
+            <artifactId>redefine-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>4.11.0.201803080745-r</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+    </dependencies>
+
+
+
+    <build>
+
+        <finalName>redefine-watchdog</finalName>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
